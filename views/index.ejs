@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <section class="row">
+        <section class="column">
+            <h2>Input API Data Here</h2>
+            <form action="/api" method="POST">
+                <input type="text" placeholder="Character" name="character">
+                <textarea name="phrase" type=text id="" cols="30" rows="10" placeholder="phrase"></textarea>
+                <input type="number" placeholder="season" name="season">
+                <input type="number" placeholder="episode" name="episode">
+                <button type="submit">Submit New</button>
+                <button type="button" id="updateButton">Update Existing</button>
+            </form>
+        </section>
+
+        <section class="column">
+            <h2>Delete API data here</h2>
+            <input type="text" placeholder="phrase to delete" name="deleteInput" id="deleteInput">
+            <button id="deleteButton">Delete</button>
+
+            <h2>Characters Quoted</h2>
+            <ul class="aliens">
+                <% for(let i = 0; i < info.length; i++){ %>
+                    <li class="character">
+                        <span><%= info[i] %></span>
+                    </li>
+                <% } %>
+            </ul>
+        </section>
+    </section>
+<script src="/main.js"></script>
+</body>
+</html>
