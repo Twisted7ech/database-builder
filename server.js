@@ -4,6 +4,10 @@ const { response } = require('express')
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
+const {Mongoclient, ObjectID} = require('mongodb')
+const { request } = require("express");
+const client = new MongoClient(process.env["ATLAS_URI"]);
+
 const PORT = 8005
 require('dotenv').config()
 
@@ -24,21 +28,114 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: true }));
 
-//CRUD
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////READ///////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/', (req, res) => {
-    db.collection('quotes').find().toArray()
+    db.collection('transcript').find().sort({episode: 1}).toArray()
         .then(data => {
             // console.log(data)
-            let nameList = data.map(item => item.character)
-            console.log(nameList)
-            res.render('index.ejs', {info: nameList})
+            let epList = data.map(item => item.episode)
+            // console.log(nameList)
+            res.render('index.ejs', {info: epList})
         })
         .catch(error => console.error(error))
 })
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////returns details about chosen episdoe////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+app.get('/api/:episodes', (req, res) => {
+    let episodes = req.params.episodes
+    db.collection('transcript').find().toArray()
+        .then(data => {
+            res.json(data.filter(objects => objects.episode === episodes)
+            )
+        })
+        .catch(error => console.error(error))
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////returns every line from specified character in specified episode////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+app.get('/api/:episodes/:char', (req, res) => {
+    let episodes = req.params.episodes
+    let char = req.params.char
+    db.collection('transcript').find().toArray()
+        .then(data => {
+            let thisEpisode = data.filter(objects => objects.episode === episodes)
+            let thisScript = thisEpisode[0].script
+            let scriptArr = thisScript.split('\\n\\n')
+            let lines = []
+            for (let i =0; i < scriptArr.length; i++){
+                let divide = scriptArr[i].split(': ')
+                if (divide[1] && divide[0] === char){
+                    lines.push(divide[1])
+                }
+            }
+            res.json(lines)
+            // res.render('index.ejs', {info: char, info: lines})
+        })
+        .catch(error => console.error(error))
+})
+////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////search for phrase in whole database////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get("/search", async (request, response) => {
+    try {
+        let result = await dbName.aggregate([
+            {
+                "$search": {
+                    "autocomplete": {
+                        "query": `${request.query.query}`,
+                        "path": "name",
+                        "fuzzy": {
+                            "maxEdits": 2,
+                            "prefixLength": 3
+                        }
+                    }
+                }
+            }
+        ]).toArray();
+        response.send(result);
+    } catch (e) {
+        response.status(500).send({ message: e.message });
+    }
+});
+
+app.get("/get/:id", async (request, response) => {
+    try {
+        let result = await dbName.findOne({ "_id": ObjectID(request.params.id) });
+        response.send(result);
+    } catch (e) {
+        response.status(500).send({ message: e.message });
+    }
+});
+// app.get('/search/:quotes', (req, res) => {
+//     let quotes = req.params.quotes
+//     db.collection('transcript').find().toArray()
+//         .then(data => {
+//             console.log(data.length)
+//             // for( let i = 0; i <database.length; i++){
+//             //     for(key in database[i]){
+//             //         if(database[i][key].indexOf(quotes)!=-1) {
+//             //             console.log(database[i])
+//             //             results.push(database[i])
+//             //         }
+//             //     }
+//             // }
+//             // console.log(results)
+//             res.json(data)
+            
+//         })
+//         .catch(error => console.error(error))
+// })
+
+
 
 
 
@@ -46,7 +143,9 @@ app.get('/', (req, res) => {
 ////////////////////////////////////////////CREATE//////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 app.post('/api', (req, res) => {
-    db.collection('quotes').insertOne(
+    let episode = req.body.episode
+    let script = req.body.script
+    db.collection('transcript').insertOne(
         req.body
     )
     .then(result => {
@@ -87,8 +186,8 @@ app.put('/updateEntry', (req, res) => {
 ///////////////////////////////////////////DELETE///////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 app.delete('/deleteEntry', (req, res) => {
-    db.collection('quotes').deleteOne(
-        {name: req.body.name}
+    db.collection('transcript').deleteOne(
+        {episode: req.body.episode}
     )
     .then(result => {
         console.log('Entry Deleted')
@@ -96,9 +195,6 @@ app.delete('/deleteEntry', (req, res) => {
     })
     .catch(error => console.error(error))
 })
-
-
-
 
 
 

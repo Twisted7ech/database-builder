@@ -1,7 +1,20 @@
-document.querySelector('#updateButton').addEventListener('click', updateEntry)
+// document.querySelector('#updateButton').addEventListener('click', updateEntry)
 document.querySelector('#deleteButton').addEventListener('click', deleteEntry)
+document.querySelector('#episodeButton').addEventListener('click', getEpisode)
 
 
+async function getEpisode(){
+    try{
+        const episode = document.querySelector('#episodeChoice').value
+        const response = await fetch('/api/:' + episode)
+        const data = await response.json()
+        document.querySelector('#episodeTitle').innerText = data.title
+        document.querySelector('#episodeScript').innerText = data.script
+    }
+    catch(err) {
+        console.error(err)
+    }
+}
 async function updateEntry(){
     try{
         const response = await fetch('updateEntry', {
@@ -31,7 +44,7 @@ async function deleteEntry(){
             method: 'delete',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                phrase: input.value
+                episode: input.value
             })
         })
         const data = await response.json()

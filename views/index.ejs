@@ -4,29 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD</title>
+    <title>F·r·i·e·n·d·s</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="icon" type="image/png" href="favicon.ico"/>
+
 </head>
 <body>
     <section class="row">
         <section class="column">
-            <h2>Input API Data Here</h2>
+            <h2>Insert new episdoe script here</h2>
             <form action="/api" method="POST">
-                <input type="text" placeholder="Character" name="character">
-                <textarea name="phrase" type=text id="" cols="30" rows="10" placeholder="phrase"></textarea>
-                <input type="number" placeholder="season" name="season">
-                <input type="number" placeholder="episode" name="episode">
+                <input type="number" placeholder="episode 215 or 1007" name="episode">
+                <input type="text" placeholder="the one where..." name="title">
+                <textarea name="script" type=text cols="30" rows="10" placeholder="script"></textarea>
                 <button type="submit">Submit New</button>
-                <button type="button" id="updateButton">Update Existing</button>
+                <!-- <button type="button" id="updateButton">Update Existing</button> -->
+                <!-- <input type="text" placeholder="Character" name="character"> -->
+                <!-- <input type="number" placeholder="season" name="season"> -->
             </form>
         </section>
 
         <section class="column">
-            <h2>Delete API data here</h2>
-            <input type="text" placeholder="phrase to delete" name="deleteInput" id="deleteInput">
+            <h2>Delete Episodes Here</h2>
+            <input type="text" placeholder="episode to delete" name="deleteInput" id="deleteInput">
             <button id="deleteButton">Delete</button>
 
-            <h2>Characters Quoted</h2>
+            <h2>Episodes Available</h2>
+            <h3 id="char"><% info.char %></h3>
             <ul class="aliens">
                 <% for(let i = 0; i < info.length; i++){ %>
                     <li class="character">
@@ -35,6 +39,14 @@
                 <% } %>
             </ul>
         </section>
+    </section>
+    <section class="row">
+        <section>
+            <input id="episodeChoice" placeholder="episode number"></input><button id="episodeButton">Get Episode</button>
+            <span id="episodeTitle"></span>
+            <p id="episodeScript"></p>
+        </section>
+
     </section>
 <script src="/main.js"></script>
 </body>
