@@ -4,10 +4,6 @@ const { response } = require('express')
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
-const {Mongoclient, ObjectID} = require('mongodb')
-const { request } = require("express");
-const client = new MongoClient(process.env["ATLAS_URI"]);
-
 const PORT = 8005
 require('dotenv').config()
 
@@ -28,8 +24,6 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(BodyParser.json());
-app.use(BodyParser.urlencoded({ extended: true }));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////READ///////////////////////////////////////////////
@@ -38,9 +32,13 @@ app.get('/', (req, res) => {
     db.collection('transcript').find().sort({episode: 1}).toArray()
         .then(data => {
             // console.log(data)
-            let epList = data.map(item => item.episode)
+            let episodes = data.map(item => item.episode)
+            let titles = data.map(item => item.title)
+            let epList = {
+                episdoes:  titles
+            }
             // console.log(nameList)
-            res.render('index.ejs', {info: epList})
+            res.render('index.ejs', {info: episodes, data:titles})
         })
         .catch(error => console.error(error))
 })
@@ -85,36 +83,7 @@ app.get('/api/:episodes/:char', (req, res) => {
 /////////////////////////search for phrase in whole database////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-app.get("/search", async (request, response) => {
-    try {
-        let result = await dbName.aggregate([
-            {
-                "$search": {
-                    "autocomplete": {
-                        "query": `${request.query.query}`,
-                        "path": "name",
-                        "fuzzy": {
-                            "maxEdits": 2,
-                            "prefixLength": 3
-                        }
-                    }
-                }
-            }
-        ]).toArray();
-        response.send(result);
-    } catch (e) {
-        response.status(500).send({ message: e.message });
-    }
-});
 
-app.get("/get/:id", async (request, response) => {
-    try {
-        let result = await dbName.findOne({ "_id": ObjectID(request.params.id) });
-        response.send(result);
-    } catch (e) {
-        response.status(500).send({ message: e.message });
-    }
-});
 // app.get('/search/:quotes', (req, res) => {
 //     let quotes = req.params.quotes
 //     db.collection('transcript').find().toArray()

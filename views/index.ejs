@@ -14,8 +14,11 @@
         <section class="column">
             <h2>Insert new episdoe script here</h2>
             <form action="/api" method="POST">
-                <input type="number" placeholder="episode 215 or 1007" name="episode">
-                <input type="text" placeholder="the one where..." name="title">
+                <h3>Episode #</h3>
+                <input type="number" placeholder="215 or 1007" name="episode">
+                <h3>Title</h3>
+                <input id='title' type="text" placeholder="the one where..." name="title">
+                <h3>Script</h3>
                 <textarea name="script" type=text cols="30" rows="10" placeholder="script"></textarea>
                 <button type="submit">Submit New</button>
                 <!-- <button type="button" id="updateButton">Update Existing</button> -->
@@ -26,18 +29,20 @@
 
         <section class="column">
             <h2>Delete Episodes Here</h2>
-            <input type="text" placeholder="episode to delete" name="deleteInput" id="deleteInput">
-            <button id="deleteButton">Delete</button>
+            <input type="text" placeholder="episode to delete" name="deleteInput" id="deleteInput"><button id="deleteButton">Delete</button>
 
             <h2>Episodes Available</h2>
             <h3 id="char"><% info.char %></h3>
-            <ul class="aliens">
-                <% for(let i = 0; i < info.length; i++){ %>
-                    <li class="character">
-                        <span><%= info[i] %></span>
-                    </li>
-                <% } %>
-            </ul>
+            <section id="epList">
+                <ul class="episodes">
+                    <% for(let i = 0; i < info.length; i++){ %>
+                        <li class="character">
+                            <span><%= info[i] %></span>: <span><%= data[i] %></span>
+                        </li>
+                    <% } %>
+                </ul>
+            </section>
+            
         </section>
     </section>
     <section class="row">
