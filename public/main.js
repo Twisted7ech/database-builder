@@ -2,12 +2,16 @@
 document.querySelector('#deleteButton').addEventListener('click', deleteEntry)
 document.querySelector('#episodeButton').addEventListener('click', getEpisode)
 
-
 async function getEpisode(){
     try{
         const episode = document.querySelector('#episodeChoice').value
-        const response = await fetch('/api/:' + episode)
+        const character = document.querySelector('#getChar').value
+        const response = await fetch('/api/:' + episode + character)
         const data = await response.json()
+    
+        console.log(data)
+    
+        
         document.querySelector('#episodeTitle').innerText = data.title
         document.querySelector('#episodeScript').innerText = data.script
     }
