@@ -43,11 +43,14 @@
             <h3 id="char"><% info.char %></h3>
             <section id="epList">
                 <ul class="episodes">
-                    <% for(let i = 0; i < info.length; i++){ %>
+                    <!-- <% for(let i = 0; i < info.length; i++){ %>
                         <li class="character">
                             <span><%= info[i] %></span>: <span><%= data[i] %></span>
                         </li>
-                    <% } %>
+                    <% } %> -->
+                    <div class="character">
+                        <%= list %>
+                    </div>
                 </ul>
             </section>
             

@@ -34,11 +34,12 @@ app.get('/', (req, res) => {
             // console.log(data)
             let episodes = data.map(item => item.episode)
             let titles = data.map(item => item.title)
-            let epList = {
-                episdoes:  titles
+            let epList = {}
+            for(let i = 0; i < episodes.length; i++){
+                epList[episodes[i]]= titles[i]
             }
-            // console.log(nameList)
-            res.render('index.ejs', {info: episodes, data:titles})
+            console.log(epList)
+            res.render('index.ejs', {info:episodes, data:titles, list:epList})
         })
         .catch(error => console.error(error))
 })
