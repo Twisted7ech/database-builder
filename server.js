@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
             for(let i = 0; i < episodes.length; i++){
                 epList[episodes[i]]= titles[i]
             }
-            console.log(epList)
+            // console.log(epList)
             res.render('index.ejs', {info:episodes, data:titles, list:epList})
         })
         .catch(error => console.error(error))
