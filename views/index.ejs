@@ -48,11 +48,15 @@
                             <span><%= info[i] %></span>: <span><%= data[i] %></span>
                         </li>
                     <% } %> -->
-                    <% for(let ep in list){ %>
+                    <% for(const ep in list){ %>
                         <li class="character">
-                            <span><%= list[ep].key %></span>: <span><%= list[ep].value %></span>
+                            <span><%= ep %></span>: <span><%= list[ep] %></span>
                         </li>
                     <% } %>
+                    <!-- const object = { a: 1, b: 2, c: 3 };
+                    for (const property in object) {
+                        console.log(`${property}: ${object[property]}`);
+                    } -->
                 </ul>
             </section>
             
